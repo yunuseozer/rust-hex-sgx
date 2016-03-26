@@ -9,7 +9,8 @@
 
     <title>lib.rs.html -- source</title>
 
-    <link rel="stylesheet" type="text/css" href="../../main.css">
+    <link rel="stylesheet" type="text/css" href="../../../rustdoc.css">
+    <link rel="stylesheet" type="text/css" href="../../../main.css">
 
     
     
@@ -162,6 +163,28 @@
 <span id="120">120</span>
 <span id="121">121</span>
 <span id="122">122</span>
+<span id="123">123</span>
+<span id="124">124</span>
+<span id="125">125</span>
+<span id="126">126</span>
+<span id="127">127</span>
+<span id="128">128</span>
+<span id="129">129</span>
+<span id="130">130</span>
+<span id="131">131</span>
+<span id="132">132</span>
+<span id="133">133</span>
+<span id="134">134</span>
+<span id="135">135</span>
+<span id="136">136</span>
+<span id="137">137</span>
+<span id="138">138</span>
+<span id="139">139</span>
+<span id="140">140</span>
+<span id="141">141</span>
+<span id="142">142</span>
+<span id="143">143</span>
+<span id="144">144</span>
 </pre><pre class='rust '>
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>error</span>;
 <span class='kw'>use</span> <span class='ident'>std</span>::<span class='ident'>fmt</span>;
@@ -191,7 +214,7 @@
     }
 }
 
-<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>, <span class='ident'>Copy</span>)]</span>
+<span class='attribute'>#[<span class='ident'>derive</span>(<span class='ident'>Debug</span>, <span class='ident'>Clone</span>, <span class='ident'>Copy</span>, <span class='ident'>PartialEq</span>)]</span>
 <span class='kw'>pub</span> <span class='kw'>enum</span> <span class='ident'>FromHexError</span> {
     <span class='ident'>InvalidHexCharacter</span> {
         <span class='ident'>c</span>: <span class='ident'>char</span>,
@@ -270,7 +293,7 @@
 
 <span class='attribute'>#[<span class='ident'>cfg</span>(<span class='ident'>test</span>)]</span>
 <span class='kw'>mod</span> <span class='ident'>test</span> {
-    <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>FromHex</span>, <span class='ident'>ToHex</span>};
+    <span class='kw'>use</span> <span class='ident'>super</span>::{<span class='ident'>FromHex</span>, <span class='ident'>FromHexError</span>, <span class='ident'>ToHex</span>};
 
     <span class='attribute'>#[<span class='ident'>test</span>]</span>
     <span class='kw'>fn</span> <span class='ident'>test_to_hex</span>() {
@@ -283,6 +306,28 @@
                    <span class='string'>b&quot;foobar&quot;</span>);
         <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Vec</span>::<span class='ident'>from_hex</span>(<span class='string'>&quot;666F6F626172&quot;</span>).<span class='ident'>unwrap</span>(),
                    <span class='string'>b&quot;foobar&quot;</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>test_invalid_length</span>() {
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Vec</span>::<span class='ident'>from_hex</span>(<span class='string'>&quot;1&quot;</span>).<span class='ident'>unwrap_err</span>(),
+                   <span class='ident'>FromHexError</span>::<span class='ident'>InvalidHexLength</span>);
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Vec</span>::<span class='ident'>from_hex</span>(<span class='string'>&quot;666f6f6261721&quot;</span>).<span class='ident'>unwrap_err</span>(),
+                   <span class='ident'>FromHexError</span>::<span class='ident'>InvalidHexLength</span>);
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>test_invalid_char</span>() {
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Vec</span>::<span class='ident'>from_hex</span>(<span class='string'>&quot;66ag&quot;</span>).<span class='ident'>unwrap_err</span>(),
+                   <span class='ident'>FromHexError</span>::<span class='ident'>InvalidHexCharacter</span> {
+                       <span class='ident'>c</span>: <span class='string'>&#39;g&#39;</span>,
+                       <span class='ident'>index</span>: <span class='number'>3</span>
+                   });
+    }
+
+    <span class='attribute'>#[<span class='ident'>test</span>]</span>
+    <span class='kw'>pub</span> <span class='kw'>fn</span> <span class='ident'>test_empty</span>() {
+        <span class='macro'>assert_eq</span><span class='macro'>!</span>(<span class='ident'>Vec</span>::<span class='ident'>from_hex</span>(<span class='string'>&quot;&quot;</span>).<span class='ident'>unwrap</span>(), <span class='string'>b&quot;&quot;</span>);
     }
 }
 </pre>
@@ -329,7 +374,7 @@
 
                 <p>
                     Search functions by type signature (e.g.
-                    <code>vec -> usize</code>)
+                    <code>vec -> usize</code> or <code>* -> vec</code>)
                 </p>
             </div>
         </div>
@@ -338,13 +383,13 @@
     
 
     <script>
-        window.rootPath = "../../";
+        window.rootPath = "../../../";
         window.currentCrate = "hex";
         window.playgroundUrl = "";
     </script>
-    <script src="../../jquery.js"></script>
-    <script src="../../main.js"></script>
+    <script src="../../../jquery.js"></script>
+    <script src="../../../main.js"></script>
     
-    <script async src="../../search-index.js"></script>
+    <script defer src="../../../search-index.js"></script>
 </body>
 </html>
