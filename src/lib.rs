@@ -37,11 +37,26 @@
 #![cfg_attr(docsrs, feature(doc_cfg))]
 #![allow(clippy::unreadable_literal)]
 
-#[cfg(feature = "alloc")]
+#![cfg_attr(all(feature = "mesalock_sgx",
+                not(target_env = "sgx")), no_std)]
+#![cfg_attr(all(target_env = "sgx", target_vendor = "mesalock"), feature(rustc_private))]
+
+#[cfg(not(feature = "std"))]
 extern crate alloc;
 #[cfg(feature = "alloc")]
 use alloc::{string::String, vec::Vec};
 
+#[cfg(all(feature = "mesalock_sgx", not(target_env = "sgx")))]
+#[macro_use]
+extern crate sgx_tstd as std;
+
+#[cfg(all(feature = "mesalock_sgx", target_env = "sgx"))]
+extern crate core;
+
+#[cfg(feature = "std")]
+use std::prelude::v1::*;
+
+use core::fmt;
 use core::iter;
 
 mod error;
