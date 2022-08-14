@@ -20,11 +20,10 @@ harness = false
 
 [dependencies]
 serde = { git = "https://github.com/yunuseozer/serde-sgx.git", default-features = false, optional = true }
+sgx_tstd = { rev = "v1.1.4-upgrade", git = "https://github.com/yunuseozer/incubator-teaclave-sgx-sdk.git", optional = true }
+
 
 [dev-dependencies]
 #criterion = "0.2"
 #rustc-hex = "2.0"
 #faster-hex = "0.3"
-
-[dependencies]
-sgx_tstd = { rev = "v1.1.4-upgrade", git = "https://github.com/yunuseozer/incubator-teaclave-sgx-sdk.git", optional = true }
